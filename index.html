@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="main.js" defer type="module"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="styles.css" >
+    <title>Solarrechner</title>
+</head>
+<body>
+    
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <a class="navbar-brand" href="#">Solarrechner</a>
+        <a href="guide.html">Guide</a>
+    </nav>
+    
+    <div class="container bg-light">
+        <h1>Eingabedaten</h1>
+        <div class="row">
+            <div class="col-lg-6">
+                <div class="form-group">
+                    <label for="region">In welchem Bundesland befindet sich ihr Gebäude?</label>
+                    <div class="info-icon">🛈<span class="info-text">Wählen Sie die Region aus, in dem das Bundesland Ihres Gebäudes liegt.</span></div>
+                    <select class="form-control" id="region-select">
+                        <option value="NONE" disabled selected="selected">Region auswählen</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="city">In welcher Region befindet sich ihr Gebäude?</label>
+                    <div class="info-icon">🛈<span class="info-text">Wählen Sie hier nun die Stadt aus, die am nächsten an Ihrem Gebäude liegt.</span></div>
+                    <select class="form-control" id="city-select">
+                        <option value="NONE" disabled selected="selected">Nähere Auswahl</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="celltype">Welchen Zellentyp wollen sie verwenden?</label>
+                    <div class="info-icon">🛈<span class="info-text">Wählen Sie die Beschaffenheit ihrer Wunsch-Solarzelle. Diese können Sie jederzeit ändern um die vorhandenen Optionen zu probieren.</span></div>
+                    <select class="form-control" id="celltype-select">
+                        <option value="NONE" disabled selected="selected">Zellentyp</option>
+                    </select>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <img src="./img_roof.jpg" alt="Solarzelle" id="celltype-image" width="300px">
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-6">
+                <p>Breitengrad ihres Gebäudes: <span class="info-icon">🛈<span class="info-text">Geben Sie bitte den Breitengrad auf dem sich Ihr Gebäude befindet möglichst genau (in Grad) als Dezimalzahl an.</span></span></p>
+                <input type="text" id="latitude" placeholder="Latitude">
+            </div>
+            <div class="col-lg-6">
+                <p>Neigungswinkel ihres Dachs: <span class="info-icon">🛈<span class="info-text">Geben Sie bitte den Neigungswinkel des Dachs Ihres Gebäudes in Grad an.</span></span></p>
+                <input type="number" id="angle" placeholder="Neigungswinkel">
+            </div>
+            <div class="col-lg-6">
+                <p>Geschätzter Stromverbrauch pro Jahr in kWh: <span class="info-icon">🛈<span class="info-text">Geben Sie bitte den ungefähren jährlichen Stromverbrauch Ihres Gebäudes an. Dieser wird nur zu Vergleichszwecken benötigt.</span></span></p>
+                <input type="number" id="usage" placeholder="Stromverbrauch">
+            </div>
+            <div class="col-lg-6">
+                <p>Verfügbare Dachfläche in m²: <span class="info-icon">🛈<span class="info-text">Geben Sie bitte die zur Verfügung stehende Dachfläche in Quadratmetern an. Es wird davon ausgegangen, das die ganze angegebene Fläche genutzt werden kann.</span></span></p>
+                <input type="number" id="area" placeholder="Dachfläche">
+            </div>
+        </div>
+        <br>
+        <label for="e">Ertrag der Photovoltaikanlage mit den eingegebenen Daten berechnen: </label>
+        <button type="button" class="btn btn-primary" id="calculate">Berechnen</button>
+    </div>
+    <br>
+    <div class="container bg-light">
+        <h1>Ergebnis</h1>
+        <br>
+        <!-- create a table -->
+        <table class="table">
+            <thead>
+                <tr>
+                    <th scope="col">Region</th>
+                    <th scope="col">Breitengrad</th>
+                    <th scope="col">Neigungswinkel</th>
+                    <th scope="col">Stromverbrauch</th>
+                    <th scope="col">Dachfläche</th>
+                    <th scope="col">Zellentyp</th>
+                    <th scope="col">theoretisches Erzeugnis</th>
+                    <th scope="col">realistisches Erzeugnis</th>
+                </tr>
+            </thead>
+            <tbody id="result-table">
+                <tr>
+                    <td id="region-result"></td>
+                    <td id="latitude-result"></td>
+                    <td id="angle-result"></td>
+                    <td id="usage-result"></td>
+                    <td id="area-result"></td>
+                    <td id="celltype-result"></td>
+                    <td id="production-result"></td>
+                    <td id="production-result-real"></td>
+                </tr>
+            </tbody>
+        </table>
+        <div class="row">
+            <div class="col-lg-6">
+                <p>Strompreis in ct: <span class="info-icon">🛈<span class="info-text">Geben Sie den Strompreis ihres Anbieters pro Kilowattstunde in ct an.</span></span>
+                </p>
+                    <input type="number" id="cost" placeholder="Strompreis">
+            </div>
+            <div class="col-lg-6">
+                <p>Stromkosten eingespaart bei 100% Eigenverbrauch:</p>
+                ideal: <p id="cost-result"></p>
+                realisitsch: <p id="cost-result-real"></p>
+            </div>
+        </div>
+        <br>
+        <p class="summary" id="summary"></p>
+    </div>
+    <br>
+    <div class="container bg-light">
+        <!-- create a tabke containing text on the left and input fields on the right. also create a summary row at the bottom -->
+        <h2>Kostenübersicht</h2>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th scope="col">Eingabe</th>
+                    <th scope="col">Menge</th>
+                    <th scope="col">Wert</th>
+                    <th scope="col">Teilsumme</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>
+                        Photovoltaikmodule:
+                    </td>
+                    <td>
+                        <input type="number" id="cost-module-amount" placeholder="Anzahl">
+                    </td>
+                    <td>
+                        <input type="number" id="cost-module-price" placeholder="Preis"> €
+                    </td>
+                    <td>
+                        <p id="cost-module-result"></p>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Wechselrichter:
+                    </td>
+                    <td>
+                        <input type="number" id="cost-inverter-amount" placeholder="Anzahl" value="1">
+                    </td>
+                    <td>
+                        <input type="number" id="cost-inverter-price" placeholder="Preis"> €
+                    </td>
+                    <td>
+                        <p id="cost-inverter-result"></p>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Montage:
+                    </td>
+                    <td>
+                        <input type="number" id="cost-mounting-amount" placeholder="Anzahl" value="1">
+                    </td>
+                    <td>
+                        <input type="number" id="cost-mounting-price" placeholder="Preis"> €
+                    </td>
+                    <td>
+                        <p id="cost-mounting-result"></p>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Speicher:
+                    </td>
+                    <td>
+                        <input type="number" id="cost-storage-amount" placeholder="Anzahl" value="1">
+                    </td>
+                    <td>
+                        <input type="number" id="cost-storage-price" placeholder="Preis"> €
+                    </td>
+                    <td>
+                        <p id="cost-storage-result"></p>
+                    </td>
+                </tr>
+                <tr class="table-active">
+                    <td>
+                        Gesamtsumme:
+                    </td>
+                    <td>
+                    </td>
+                    <td>
+                    </td>
+                    <td>
+                        <p id="cost-total-result"></p>
+                    </td>
+                </tr>
+                <tr class="table-active">
+                    <td>
+                        Amortisationszeit:
+                    </td>
+                    <td>
+                    </td>
+                    <td>
+                    </td>
+                    <td>
+                        ideale Amortisationszeit: <p id="ammortation-ideal"></p>
+                        realistische Amortisationszeit: <p id="ammortation-real"></p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>

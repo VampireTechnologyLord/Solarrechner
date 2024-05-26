@@ -1,0 +1,33 @@
+.info-icon {
+    position: relative;
+    display: inline-block;
+    color: #000;
+}
+
+.info-icon .info-text {
+    visibility: hidden;
+    width: max-content;
+    max-width: 350px;
+    background-color: #555;
+    color: #fff;
+    text-align: left;
+    border-radius: 6px;
+    padding: 5px 5px;
+    position: absolute;
+    z-index: 1;
+}
+
+.info-icon:hover .info-text {
+    visibility: visible;
+}
+
+.summary {
+    display: block;
+    width: 100%;
+    padding: 0.75rem 1.25rem;
+    margin-bottom: 1rem;
+    font-size: 1.25rem;
+    line-height: 1.5;
+    background-color: #94d1da;
+    border: 1px solid #2a526a;
+}
